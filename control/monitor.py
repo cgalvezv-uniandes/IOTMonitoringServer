@@ -67,16 +67,45 @@ def send_max_temp_data():
                 'station__location__country__name'
             )
     
+    variable = data[0]['measurement__name']
+    max_value = data[0]['max_value']
     country = data[0]['station__location__country__name']
     state = data[0]['station__location__state__name']
     city = data[0]['station__location__city__name']
     user = data[0]['station__user__username']
-    print('Máximo valor de Temperatura obtenido: ', data[0]['max_value'])
-    print(country, state, city, user)
+    print('Máximo valor de Temperatura obtenido: ', max_value)
+    message = "ALERT {} {} {}".format(variable, max_value)
+    topic = '{}/{}/{}/{}/in'.format(country, state, city, user)
+    print(datetime.now(), "Sending alert to {} {}".format(topic, variable))
+    client.publish(topic, message)
 
 def send_max_hum_data():
-    data = Data.objects.filter(measurement_id=2).all().order_by('-max_value').values()
+    data = Data.objects.filter(measurement_id=2).all().order_by('-max_value')\
+        .select_related('station', 'measurement') \
+        .select_related('station__user', 'station__location') \
+        .select_related('station__location__city', 'station__location__state',
+                        'station__location__country') \
+        .values('max_value', 'station__user__username',
+                'measurement__name',
+                'measurement__max_value',
+                'measurement__min_value',
+                'station__location__city__name',
+                'station__location__state__name',
+                'station__location__country__name'
+            )
+    
+    variable = data[0]['measurement__name']
+    max_value = data[0]['max_value']
+    country = data[0]['station__location__country__name']
+    state = data[0]['station__location__state__name']
+    city = data[0]['station__location__city__name']
+    user = data[0]['station__user__username']
     print('Máximo valor de Humedad obtenido: ', data[0]['max_value'])
+    message = "ALERT {} {} {}".format(variable, max_value)
+    topic = '{}/{}/{}/{}/in'.format(country, state, city, user)
+    print(datetime.now(), "Sending alert to {} {}".format(topic, variable))
+    client.publish(topic, message)
+    
 
 
 
