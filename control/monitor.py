@@ -58,6 +58,11 @@ def analyze_data():
     print(len(aggregation), "dispositivos revisados")
     print(alerts, "alertas enviadas")
 
+def send_max_temp_data():
+    data = Data.objects.filter(measurement_id=1).all().order_by('max_value').values()
+    print(data)
+
+
 
 def on_connect(client, userdata, flags, rc):
     '''
@@ -106,6 +111,7 @@ def start_cron():
     '''
     print("Iniciando cron...")
     schedule.every(5).minutes.do(analyze_data)
+    schedule.every(1).minutes.do(send_max_temp_data)
     print("Servicio de control iniciado")
     while 1:
         schedule.run_pending()
