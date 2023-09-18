@@ -25,7 +25,13 @@ def analyze_data():
         .select_related('station__user', 'station__location') \
         .select_related('station__location__city', 'station__location__state',
                         'station__location__country') \
-        .values()
+        .values('check_value', 'station__user__username',
+                'measurement__name',
+                'measurement__max_value',
+                'measurement__min_value',
+                'station__location__city__name',
+                'station__location__state__name',
+                'station__location__country__name')
     alerts = 0
     for item in aggregation:
         alert = False
