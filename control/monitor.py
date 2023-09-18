@@ -59,8 +59,12 @@ def analyze_data():
     print(alerts, "alertas enviadas")
 
 def send_max_temp_data():
-    data = Data.objects.filter(measurement_id=1).all().order_by('max_value').values()
-    print(data)
+    data = Data.objects.filter(measurement_id=1).all().order_by('-max_value').values()
+    print('Máximo valor de Temperatura obtenido: ', data[0]['max_value'])
+
+def send_max_hum_data():
+    data = Data.objects.filter(measurement_id=2).all().order_by('-max_value').values()
+    print('Máximo valor de Humedad obtenido: ', data[0]['max_value'])
 
 
 
@@ -112,6 +116,7 @@ def start_cron():
     print("Iniciando cron...")
     schedule.every(5).minutes.do(analyze_data)
     schedule.every(1).minutes.do(send_max_temp_data)
+    schedule.every(1).minutes.do(send_max_hum_data)
     print("Servicio de control iniciado")
     while 1:
         schedule.run_pending()
