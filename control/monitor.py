@@ -74,9 +74,9 @@ def send_max_temp_data():
     city = data[0]['station__location__city__name']
     user = data[0]['station__user__username']
     print('Máximo valor de Temperatura obtenido: ', max_value)
-    message = "ALERT {} {}".format(variable, max_value)
+    message = "MEASUREMENT {} {}".format(variable, max_value)
     topic = '{}/{}/{}/{}/in'.format(country, state, city, user)
-    print(datetime.now(), "Sending alert to {} {}".format(topic, variable))
+    print(datetime.now(), "Sending measurement to {} {}".format(topic, variable))
     client.publish(topic, message)
 
 def send_max_hum_data():
@@ -101,9 +101,9 @@ def send_max_hum_data():
     city = data[0]['station__location__city__name']
     user = data[0]['station__user__username']
     print('Máximo valor de Humedad obtenido: ', data[0]['max_value'])
-    message = "ALERT {} {}".format(variable, max_value)
+    message = "MEASUREMENT {} {}".format(variable, max_value)
     topic = '{}/{}/{}/{}/in'.format(country, state, city, user)
-    print(datetime.now(), "Sending alert to {} {}".format(topic, variable))
+    print(datetime.now(), "Sending measurement to {} {}".format(topic, variable))
     client.publish(topic, message)
     
 
